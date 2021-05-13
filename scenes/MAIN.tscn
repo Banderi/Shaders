@@ -1,0 +1,115 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://scenes/BALL.tscn" type="PackedScene" id=1]
+[ext_resource path="res://shaders/goop_shadermaterial.tres" type="Material" id=2]
+[ext_resource path="res://scripts/MeshInstance.gd" type="Script" id=4]
+[ext_resource path="res://scenes/controller.tscn" type="PackedScene" id=7]
+
+[sub_resource type="ProceduralSky" id=1]
+
+[sub_resource type="Environment" id=2]
+background_mode = 2
+background_sky = SubResource( 1 )
+ambient_light_color = Color( 0, 0.411765, 0.541176, 1 )
+ambient_light_sky_contribution = 0.0
+
+[sub_resource type="PlaneShape" id=3]
+
+[sub_resource type="PlaneMesh" id=4]
+
+[sub_resource type="BoxShape" id=5]
+extents = Vector3( 4, 14, 6 )
+
+[sub_resource type="CubeMesh" id=6]
+size = Vector3( 2, 6, 3 )
+
+[sub_resource type="CubeMesh" id=7]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="WorldEnvironment"]
+transform = Transform( 0.938463, -0.313084, 0.145827, 0, 0.422223, 0.906492, -0.34538, -0.850709, 0.39624, 0, 17.3277, 0 )
+
+[node name="controller" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.83736, 2.94054, 7.42363 )
+
+[node name="FLOOR" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.52942, 0 )
+visible = false
+
+[node name="CollisionShape" type="CollisionShape" parent="FLOOR"]
+shape = SubResource( 3 )
+
+[node name="MeshInstance" type="MeshInstance" parent="FLOOR"]
+transform = Transform( 16.4919, 0, 0, 0, 16.4919, 0, 0, 0, 16.4919, 0, 0, 0 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="PILLAR" type="StaticBody" parent="."]
+transform = Transform( 0.362203, 0, 0, 0, 0.362203, 0, 0, 0, 0.362203, -4.20185, 3.20963, 0.972822 )
+visible = false
+
+[node name="CollisionShape" type="CollisionShape" parent="PILLAR"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="PILLAR"]
+transform = Transform( 4.6856, 0, 0, 0, 4.6856, 0, 0, 0, 4.6856, 0, 0, 0 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="RAYMARCH" type="MeshInstance" parent="."]
+transform = Transform( 8.56792, 0, 0, 0, 8.56792, 0, 0, 0, 8.56792, 0, 0.181018, 0 )
+mesh = SubResource( 7 )
+material/0 = ExtResource( 2 )
+script = ExtResource( 4 )
+
+[node name="BALL1" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL2" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL3" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL4" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL5" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL6" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL7" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL8" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL9" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL10" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL11" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL12" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL13" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL14" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL15" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL16" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL17" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL18" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL19" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL20" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL21" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL22" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL23" parent="." instance=ExtResource( 1 )]
+
+[node name="BALL24" parent="." instance=ExtResource( 1 )]
