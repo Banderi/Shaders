@@ -4,34 +4,9 @@ render_mode unshaded, cull_disabled, depth_test_disable;
 
 uniform sampler2D mat_cap;
 
-//uniform int NUMBER_OF_STEPS = 0;
-//uniform vec3 camera_pos;
-//uniform vec3 sphere_1 = vec3(0.0);
-//uniform vec3 sphere_2 = vec3(0.0);
-//uniform vec3 sphere_3 = vec3(0.0);
-//uniform vec3 sphere_4 = vec3(0.0);
-//uniform vec3 sphere_5 = vec3(0.0);
-//uniform vec3 sphere_6 = vec3(0.0);
-//uniform vec3 sphere_7 = vec3(0.0);
-//uniform vec3 sphere_8 = vec3(0.0);
-//uniform vec3 sphere_9 = vec3(0.0);
-//uniform vec3 sphere_10 = vec3(0.0);
-//uniform vec3 sphere_11 = vec3(0.0);
-//uniform vec3 sphere_12 = vec3(0.0);
-//uniform vec3 sphere_13 = vec3(0.0);
-//uniform vec3 sphere_14 = vec3(0.0);
-//uniform vec3 sphere_15 = vec3(0.0);
-//uniform vec3 sphere_16 = vec3(0.0);
-//uniform vec3 sphere_17 = vec3(0.0);
-//uniform vec3 sphere_18 = vec3(0.0);
-//uniform vec3 sphere_19 = vec3(0.0);
-//uniform vec3 sphere_20 = vec3(0.0);
-//uniform vec3 sphere_21 = vec3(0.0);
-//uniform vec3 sphere_22 = vec3(0.0);
-//uniform vec3 sphere_23 = vec3(0.0);
-//uniform vec3 sphere_24 = vec3(0.0);
-
 uniform sampler2D sphere_buff;
+
+uniform int tex_res : hint_range(1, 10) = 6;
 
 //varying vec3 sphere_arr[24];
 //varying float v_index;
@@ -160,41 +135,40 @@ float sdf_mandelbulb(in vec3 p, in float power)
 
     return 0.5 * log( r ) * r / dr;
 }
-
 float sdf_mandel_two(in vec3 p, in float power)
 {
-//	float power = 2.0;
-    vec3 z = p; //fv(x, 8) * 0.9f + x * 0.1f;
+	float blocksize = 0.1;
+	p = p * 0.001 + round( p / blocksize ) *  blocksize  * 0.999;
+	
+    vec3 z = p;
     float dr = 1.0;
     float r = 0.0;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 20; i++)
     {
         r = length(z);
-        if (r > 1.5f)
-        {
-            break;
-        }
+		if (r > 4.0)
+			break;
+			
         float theta = acos(z.z / r) * power;
         float phi = atan(z.y, z.x) * power;
         float zr = pow(r, power);
-        dr = pow(r, (power - 1f) * power * dr + 1f);
+        dr =  pow(r, power - 1.0) * power * dr + 1.0;
 
-        vec3 z2 = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
-        z += z2;
+		z = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
+        z += p;
     }
 
-    float result = (0.5 * log(r) * r / dr) ;
-    return result;
+    return 0.25 * log(r) * r / dr;
 }
 float sdf_mandel_two_orig(in vec3 p, in float power)
 {	
 	vec3 z = p;
     float dr = 1.0;
     float r = 0.0;
+	
     for (int i = 0; i < 20 ; i++) {
         r = length(z);
-//        int steps = 1;
         if (r > 4.0)
 			break;
         
@@ -213,22 +187,17 @@ float sdf_mandel_two_orig(in vec3 p, in float power)
         z += p;
     }
 
-    return 0.5 * log(r) * r / dr;
+    return 0.25 * log(r) * r / dr;
 }
 
-
-
-
-
-
-uniform int tex_res : hint_range(1, 10) = 6;
 
 float sdf(in vec3 p, float time)
 {
 	
 //	return sdf_sphere(p, vec3(0,0,0), 5.0);
 	
-	return sdf_mandel_two_orig(p, 2.0 * sin(time) + 4.0);
+	return sdf_mandel_two(p, 2.0 * sin(time) + 4.0);
+	return sdf_mandel_two_orig(p, 3.0);
 	
 	return sdf_mandelbulb(p, 3.0); //2.0 * sin(time) + 4.0
 	
@@ -260,33 +229,6 @@ float sdf(in vec3 p, float time)
 	
 //	return sdf_capsule(p, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0), 1.0);
 //	return sdf_mandelbulb(p, 2.0 * sin(time) + 4.0);
-
-	
-//	vec3 sphere_arr[24];
-//	sphere_arr[0] = sphere_1;
-//	sphere_arr[1] = sphere_2;
-//	sphere_arr[2] = sphere_3;
-//	sphere_arr[3] = sphere_4;
-//	sphere_arr[4] = sphere_5;
-//	sphere_arr[5] = sphere_6;
-//	sphere_arr[6] = sphere_7;
-//	sphere_arr[7] = sphere_8;
-//	sphere_arr[8] = sphere_9;
-//	sphere_arr[9] = sphere_10;
-//	sphere_arr[10] = sphere_11;
-//	sphere_arr[11] = sphere_12;
-//	sphere_arr[12] = sphere_13;
-//	sphere_arr[13] = sphere_14;
-//	sphere_arr[14] = sphere_15;
-//	sphere_arr[15] = sphere_16;
-//	sphere_arr[16] = sphere_17;
-//	sphere_arr[17] = sphere_18;
-//	sphere_arr[18] = sphere_19;
-//	sphere_arr[19] = sphere_20;
-//	sphere_arr[20] = sphere_21;
-//	sphere_arr[21] = sphere_22;
-//	sphere_arr[22] = sphere_23;
-//	sphere_arr[23] = sphere_24;
 	
 //	res = sdf_sphere(p, sphere_1, sph_radius);
 	
@@ -375,7 +317,13 @@ void fragment() {
     vec3 pixel_position = upos.xyz / upos.w;
 	float z_depth = length(pixel_position);
 
-//	z_depth = 10000.0;
+	// for outline debugging / sdf visualization
+	float ddd = max(0.0, 1.0 - smallest_distance_found);
+	ddd = pow(ddd, 25);
+	float mmm = max(0.0, 1.0 - hit_distance / 100.0);
+	float sss = max(0.0, float(steps_taken) / 100.0);
+	sss = pow(sss, 5) + 0.5 * sss;
+
     if (hit && hit_distance <= z_depth) {
 		
 		vec3 normal_adj = (WORLD_MATRIX * (INV_CAMERA_MATRIX * vec4(normal, 0.0))).xyz;
@@ -384,23 +332,14 @@ void fragment() {
 		vec2 v_n = (normal_adj.xy / 2.0); // + vec2(-0.075, 0.45);
   		v_n.y = (v_n.y * -1.0) + 1.0;
 		
-//        ALBEDO = texture(mat_cap, v_n + vec2(0.5, 0.5)).rgb;
-//		ALBEDO = normal_adj;
-		ALBEDO = normal;
+//      ALBEDO = texture(mat_cap, v_n + vec2(0.5, 0.5)).rgb;
+		ALBEDO = normal_adj;
+//		ALBEDO = normal;
         ALPHA = 1.0;
     }
     else {
+		ALBEDO = vec3(sss, mmm, ddd);
 //		ALBEDO = vec3(1.0 - min(smallest_distance_found, 1.0));
-
-		float ddd = max(0.0, 1.0 - smallest_distance_found);
-		ddd = pow(ddd, 25);
-		
-		float mmm = max(0.0, 1.0 - hit_distance / 100.0);
-		
-		
-		ALBEDO = vec3(ddd, ddd, ddd);
-		ALBEDO = vec3(mmm, mmm, mmm);
-		
 
 //		ALBEDO = normal;
 //		ALBEDO = vec3(z_depth / 500.0);
@@ -408,10 +347,7 @@ void fragment() {
     }
 	
 	
-	float sss = max(0.0, float(steps_taken) / 100.0);
-//	sss = pow(sss, 5);
-	sss *= 0.5;
 	
-	ALBEDO = vec3(sss, sss, sss);
+//	ALBEDO = vec3(sss, mmm, ddd);
 	
 }
